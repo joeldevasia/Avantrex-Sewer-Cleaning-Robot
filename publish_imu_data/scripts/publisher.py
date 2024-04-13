@@ -35,7 +35,7 @@ class publish_imu(Node):
     def publish_imu_data(self):
         msg = String()
         try:
-            msg.data = self.imu_data.orientation.x
+            msg.data = str(self.imu_data.orientation.x)
             self.imu_pub.publish(msg)
         except Exception as e:
             print(e)
