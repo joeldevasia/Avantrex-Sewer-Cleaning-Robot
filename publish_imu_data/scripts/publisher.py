@@ -21,7 +21,7 @@ class publish_imu(Node):
             String, "/bno055/imu", self.bno055_imu_cb, 10
         )
         
-        self.imu_pub = self.create_publisher(String, "/imu", 10)
+        self.imu_pub = self.create_publisher(String, "/IMU_Data", 10)
 
         publish_rate = 0.2  
         # self.timer = self.create_timer(
@@ -34,7 +34,7 @@ class publish_imu(Node):
     
     def publish_imu_data(self):
         msg = String()
-        msg.data = self.imu_data
+        msg.data = self.imu_data.orientation.x
         self.imu_pub.publish(msg)
        
 
