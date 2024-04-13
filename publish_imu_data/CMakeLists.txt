@@ -47,12 +47,6 @@ install(
 )
 
 install(
-  DIRECTORY
-    assets
-  DESTINATION
-    lib/${PROJECT_NAME}
-)
-install(
   PROGRAMS
   DESTINATION lib/${PROJECT_NAME}
 )
