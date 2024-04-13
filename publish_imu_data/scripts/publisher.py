@@ -6,6 +6,7 @@ import sys
 # import numpy as np
 from rclpy.node import Node
 from std_msgs.msg import String
+from sensor_msgs.msg import Imu
 # from scipy.spatial.transform import Rotation as R
 
 
@@ -18,15 +19,15 @@ class publish_imu(Node):
         self.imu_data = None
 
         self.bno055_imu_sub = self.create_subscription(
-            String, "/bno055/imu", self.bno055_imu_cb, 10
+            Imu, "/bno055/imu", self.bno055_imu_cb, 10
         )
         
         self.imu_pub = self.create_publisher(String, "/IMU_Data", 10)
 
         publish_rate = 0.2  
-        # self.timer = self.create_timer(
-        #     publish_rate, self.publish_imu_data
-        # )  
+        self.timer = self.create_timer(
+            publish_rate, self.publish_imu_data
+        )  
 
     def bno055_imu_cb(self, data):
         self.imu_data = data.data
@@ -34,7 +35,7 @@ class publish_imu(Node):
     
     def publish_imu_data(self):
         msg = String()
-        msg.data = self.imu_data.orientation.x
+        msg.data = self.imu_data
         self.imu_pub.publish(msg)
        
 
