@@ -31,15 +31,14 @@ class publish_imu(Node):
 
     def bno055_imu_cb(self, data):
         self.imu_data = data
-        print(self.imu_data)
     
     def publish_imu_data(self):
         msg = String()
         try:
             msg.data = self.imu_data.orientation.x
             self.imu_pub.publish(msg)
-        except:
-            pass
+        except Exception as e:
+            print(e)
        
 
 
