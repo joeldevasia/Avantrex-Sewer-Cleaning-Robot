@@ -7,7 +7,7 @@ import sys
 from rclpy.node import Node
 from std_msgs.msg import String
 from sensor_msgs.msg import Imu
-# from scipy.spatial.transform import Rotation as R
+from transformations import quaternion_from_euler, euler_from_quaternion
 
 
 class publish_imu(Node):
@@ -37,6 +37,8 @@ class publish_imu(Node):
         try:
             msg.data = str(self.imu_data.orientation.x)
             self.imu_pub.publish(msg)
+            euler = euler_from_quaternion([self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w])
+            print("x: ", round(euler[0],2), "y: ", round(euler[1],2), "z: ", round(euler[2],2))
         except Exception as e:
             print(e)
        
