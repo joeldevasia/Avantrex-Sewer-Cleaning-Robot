@@ -2,7 +2,7 @@
 import rclpy
 import sys
 # import cv2
-# import math
+import math
 # import numpy as np
 from rclpy.node import Node
 from std_msgs.msg import String
@@ -38,7 +38,7 @@ class publish_imu(Node):
             msg.data = str(self.imu_data.orientation.x)
             self.imu_pub.publish(msg)
             euler = euler_from_quaternion([self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w])
-            print("x: ", round(euler[0],2), "y: ", round(euler[1],2), "z: ", round(euler[2],2))
+            print("x: ", math.degrees(round(euler[0],2)), "y: ", math.degrees(round(euler[1],2)), "z: ", math.degrees(round(euler[2],2)))
         except Exception as e:
             print(e)
        
