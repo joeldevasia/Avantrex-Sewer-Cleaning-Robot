@@ -35,8 +35,11 @@ class publish_imu(Node):
     
     def publish_imu_data(self):
         msg = String()
-        msg.data = self.imu_data.orientation.x
-        self.imu_pub.publish(msg)
+        try:
+            msg.data = self.imu_data.orientation.x
+            self.imu_pub.publish(msg)
+        except:
+            pass
        
 
 
