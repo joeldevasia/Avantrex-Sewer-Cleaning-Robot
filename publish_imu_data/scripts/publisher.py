@@ -40,12 +40,14 @@ class publish_imu(Node):
             msg.data = str(self.imu_data.orientation.x)
             self.imu_pub.publish(msg)
             euler = euler_from_quaternion([self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w])
-            print("x: ", round(math.degrees(euler[0]),2), "y: ", round(math.degrees(euler[1]),2), "z: ", round(math.degrees(euler[2]),2))
-            if round(math.degrees(euler[0]))<10 or round(math.degrees(euler[0]))>350:
+            # print("x: ", round(math.degrees(euler[0]),2), "y: ", round(math.degrees(euler[1]),2), "z: ", round(math.degrees(euler[2]),2))
+            yaw = round(math.degrees(euler[0]),2)
+            print("yaw: ", yaw)
+            if yaw<10 or yaw>350:
                 turn = Int32()
                 turn.data = 0
                 self.turn_robot.publish(turn) 
-            elif round(math.degrees(euler[0]))<=180:
+            elif yaw<=180:
                 turn = Int32()
                 turn.data = 1
                 self.turn_robot.publish(turn)
