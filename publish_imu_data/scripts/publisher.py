@@ -43,11 +43,11 @@ class publish_imu(Node):
             # print("x: ", round(math.degrees(euler[0]),2), "y: ", round(math.degrees(euler[1]),2), "z: ", round(math.degrees(euler[2]),2))
             yaw = round(math.degrees(euler[0]),2)
             print("yaw: ", yaw)
-            if yaw<10 or yaw>350:
+            if abs(yaw)<=10:
                 turn = Int32()
                 turn.data = 0
                 self.turn_robot.publish(turn) 
-            elif yaw<=180:
+            elif yaw>0:
                 turn = Int32()
                 turn.data = 1
                 self.turn_robot.publish(turn)
