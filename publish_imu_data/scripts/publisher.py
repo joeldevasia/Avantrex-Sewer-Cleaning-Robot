@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-import rclpy
+import rclpy #type: ignore
 import sys
 # import cv2
 import math
 # import numpy as np
-from rclpy.node import Node
-from std_msgs.msg import String
-from sensor_msgs.msg import Imu
-from transformations import quaternion_from_euler, euler_from_quaternion
+from rclpy.node import Node #type: ignore
+from std_msgs.msg import String #type: ignore
+from std_msgs.msg import Int32 #type: ignore
+from sensor_msgs.msg import Imu #type: ignore
+from transformations import quaternion_from_euler, euler_from_quaternion #type: ignore
 
 
 class publish_imu(Node):
@@ -23,6 +24,7 @@ class publish_imu(Node):
         )
         
         self.imu_pub = self.create_publisher(String, "/IMU_Data", 10)
+        self.turn_robot = self.create_publisher(Int32, "/turn_robot", 10)
 
         publish_rate = 0.2  
         self.timer = self.create_timer(
@@ -39,6 +41,18 @@ class publish_imu(Node):
             self.imu_pub.publish(msg)
             euler = euler_from_quaternion([self.imu_data.orientation.x, self.imu_data.orientation.y, self.imu_data.orientation.z, self.imu_data.orientation.w])
             print("x: ", round(math.degrees(euler[0]),2), "y: ", round(math.degrees(euler[1]),2), "z: ", round(math.degrees(euler[2]),2))
+            if round(math.degrees(euler[0]))<10 or round(math.degrees(euler[0]))>350:
+                turn = Int32()
+                turn.data = 0
+                self.turn_robot.publish(turn) 
+            elif round(math.degrees(euler[0]))<=180:
+                turn = Int32()
+                turn.data = 1
+                self.turn_robot.publish(turn)
+            else:
+                turn = Int32()
+                turn.data = -1
+                self.turn_robot.publish(turn)
         except Exception as e:
             print(e)
        
