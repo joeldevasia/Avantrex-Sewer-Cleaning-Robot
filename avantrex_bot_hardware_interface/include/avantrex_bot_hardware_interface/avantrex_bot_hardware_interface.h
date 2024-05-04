@@ -1,5 +1,5 @@
-#ifndef DIFFDRIVE_ARDUINO_REAL_ROBOT_H
-#define DIFFDRIVE_ARDUINO_REAL_ROBOT_H
+#ifndef AVANTREX_BOT_HARDWARE_INTERFACE_REAL_ROBOT_H
+#define AVANTREX_BOT_HARDWARE_INTERFACE_REAL_ROBOT_H
 
 #include <cstring>
 #include "rclcpp/rclcpp.hpp"
@@ -18,7 +18,7 @@
 #include "std_msgs/msg/float32_multi_array.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 
-namespace diffdrive_arduino
+namespace avantrex_bot_hardware_interface
 {
   using return_type = hardware_interface::return_type;
   using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
@@ -28,11 +28,11 @@ namespace diffdrive_arduino
   using JointState = sensor_msgs::msg::JointState;
   using Float32MultiArray = std_msgs::msg::Float32MultiArray;
 
-  class DiffDriveArduino : public hardware_interface::SystemInterface
+  class AvantrexBotHardwareInterface : public hardware_interface::SystemInterface
   {
 
   public:
-    DiffDriveArduino();
+    AvantrexBotHardwareInterface();
 
     CallbackReturn on_init(const hardware_interface::HardwareInfo &info) override;
 
@@ -89,6 +89,6 @@ namespace diffdrive_arduino
 
     std::chrono::time_point<std::chrono::system_clock> time_;
   };
-} // namespace diffdrive_arduino
+} // namespace avantrex_bot_hardware_interface
 
-#endif // DIFFDRIVE_ARDUINO_REAL_ROBOT_H
+#endif // AVANTREX_BOT_HARDWARE_INTERFACE_REAL_ROBOT_H

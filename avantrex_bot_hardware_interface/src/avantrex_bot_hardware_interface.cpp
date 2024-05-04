@@ -1,4 +1,4 @@
-#include "diffdrive_arduino/diffdrive_arduino.h"
+#include "avantrex_bot_hardware_interface/avantrex_bot_hardware_interface.h"
 
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
@@ -8,15 +8,15 @@
 #include "rclcpp/logging.hpp"
 #include "rclcpp/rclcpp.hpp"
 
-namespace diffdrive_arduino
+namespace avantrex_bot_hardware_interface
 {
 
-  DiffDriveArduino::DiffDriveArduino()
-      : logger_(rclcpp::get_logger("DiffDriveArduino"))
+  AvantrexBotHardwareInterface::AvantrexBotHardwareInterface()
+      : logger_(rclcpp::get_logger("AvantrexBotHardwareInterface"))
   {
   }
 
-  CallbackReturn DiffDriveArduino::on_init(const hardware_interface::HardwareInfo &info)
+  CallbackReturn AvantrexBotHardwareInterface::on_init(const hardware_interface::HardwareInfo &info)
   {
     if (hardware_interface::SystemInterface::on_init(info) != CallbackReturn::SUCCESS)
     {
@@ -31,35 +31,35 @@ namespace diffdrive_arduino
     {
       if (joint.command_interfaces.size() != 1)
       {
-        RCLCPP_FATAL(rclcpp::get_logger("DiffDriveArduino"), "Joint '%s' has %zu command interfaces found. 1 expected.",
+        RCLCPP_FATAL(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Joint '%s' has %zu command interfaces found. 1 expected.",
                      joint.name.c_str(), joint.command_interfaces.size());
         return CallbackReturn::ERROR;
       }
 
       if (joint.command_interfaces[0].name != hardware_interface::HW_IF_VELOCITY)
       {
-        RCLCPP_FATAL(rclcpp::get_logger("DiffDriveArduino"), "Joint '%s' have %s command interfaces found. '%s' expected.",
+        RCLCPP_FATAL(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Joint '%s' have %s command interfaces found. '%s' expected.",
                      joint.name.c_str(), joint.command_interfaces[0].name.c_str(), hardware_interface::HW_IF_VELOCITY);
         return CallbackReturn::ERROR;
       }
 
       if (joint.state_interfaces.size() != 2)
       {
-        RCLCPP_FATAL(rclcpp::get_logger("DiffDriveArduino"), "Joint '%s' has %zu state interface. 2 expected.",
+        RCLCPP_FATAL(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Joint '%s' has %zu state interface. 2 expected.",
                      joint.name.c_str(), joint.state_interfaces.size());
         return CallbackReturn::ERROR;
       }
 
       if (joint.state_interfaces[0].name != hardware_interface::HW_IF_POSITION)
       {
-        RCLCPP_FATAL(rclcpp::get_logger("DiffDriveArduino"), "Joint '%s' have '%s' as first state interface. '%s' expected.",
+        RCLCPP_FATAL(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Joint '%s' have '%s' as first state interface. '%s' expected.",
                      joint.name.c_str(), joint.state_interfaces[0].name.c_str(), hardware_interface::HW_IF_POSITION);
         return CallbackReturn::ERROR;
       }
 
       if (joint.state_interfaces[1].name != hardware_interface::HW_IF_VELOCITY)
       {
-        RCLCPP_FATAL(rclcpp::get_logger("DiffDriveArduino"), "Joint '%s' have '%s' as second state interface. '%s' expected.",
+        RCLCPP_FATAL(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Joint '%s' have '%s' as second state interface. '%s' expected.",
                      joint.name.c_str(), joint.state_interfaces[1].name.c_str(), hardware_interface::HW_IF_VELOCITY);
         return CallbackReturn::ERROR;
       }
@@ -67,7 +67,7 @@ namespace diffdrive_arduino
 
     for (auto &j : info_.joints)
     {
-      RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Joint '%s' found", j.name.c_str());
+      RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Joint '%s' found", j.name.c_str());
 
       pos_state_[j.name] = 0.0;
       vel_state_[j.name] = 0.0;
@@ -79,7 +79,7 @@ namespace diffdrive_arduino
 
     std::string velocity_command_joint_order_raw = info_.hardware_parameters["velocity_command_joint_order"];
 
-    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Received velocity command joint order raw: %s",
+    // RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Received velocity command joint order raw: %s",
     //             velocity_command_joint_order_raw.c_str());
 
     // remove whitespaces
@@ -88,7 +88,7 @@ namespace diffdrive_arduino
                        { return std::isspace(static_cast<unsigned char>(c)); }),
         velocity_command_joint_order_raw.end());
 
-    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Removed Whitespaces from velocity command joint order: %s",
+    // RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Removed Whitespaces from velocity command joint order: %s",
     //             velocity_command_joint_order_raw.c_str());
 
     std::stringstream velocity_command_joint_order_stream(velocity_command_joint_order_raw);
@@ -100,7 +100,7 @@ namespace diffdrive_arduino
 
     if (velocity_command_joint_order_.size() != info_.joints.size())
     {
-      RCLCPP_FATAL(rclcpp::get_logger("DiffDriveArduino"), "Joint order size is invalid");
+      RCLCPP_FATAL(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Joint order size is invalid");
       return CallbackReturn::ERROR;
     }
 
@@ -109,7 +109,7 @@ namespace diffdrive_arduino
       if (std::find(velocity_command_joint_order_.begin(), velocity_command_joint_order_.end(), j.name) ==
           velocity_command_joint_order_.end())
       {
-        RCLCPP_FATAL(rclcpp::get_logger("DiffDriveArduino"), "Joint '%s' missing from velocity command joint order",
+        RCLCPP_FATAL(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Joint '%s' missing from velocity command joint order",
                      j.name.c_str());
         return CallbackReturn::ERROR;
       }
@@ -127,19 +127,19 @@ namespace diffdrive_arduino
     return CallbackReturn::SUCCESS;
   }
 
-  CallbackReturn DiffDriveArduino::on_configure(const rclcpp_lifecycle::State &)
+  CallbackReturn AvantrexBotHardwareInterface::on_configure(const rclcpp_lifecycle::State &)
   {
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Configuring");
+    RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Configuring");
     return CallbackReturn::SUCCESS;
   }
 
-  CallbackReturn DiffDriveArduino::on_cleanup(const rclcpp_lifecycle::State &)
+  CallbackReturn AvantrexBotHardwareInterface::on_cleanup(const rclcpp_lifecycle::State &)
   {
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Cleaning up");
+    RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Cleaning up");
     return CallbackReturn::SUCCESS;
   }
 
-  CallbackReturn DiffDriveArduino::on_activate(const rclcpp_lifecycle::State & /* previous_state */)
+  CallbackReturn AvantrexBotHardwareInterface::on_activate(const rclcpp_lifecycle::State & /* previous_state */)
   {
     motor_command_publisher_ = node_->create_publisher<Float32MultiArray>("/motors_cmd", rclcpp::SensorDataQoS());
     realtime_motor_command_publisher_ =
@@ -147,12 +147,12 @@ namespace diffdrive_arduino
 
     motor_state_subscriber_ =
         node_->create_subscription<JointState>("/motors_response", rclcpp::SensorDataQoS(),
-                                               std::bind(&DiffDriveArduino::motor_state_cb, this, std::placeholders::_1));
+                                               std::bind(&AvantrexBotHardwareInterface::motor_state_cb, this, std::placeholders::_1));
 
     std::shared_ptr<JointState> motor_state;
     for (uint wait_time = 0; wait_time <= connection_timeout_ms_; wait_time += connection_check_period_ms_)
     {
-      RCLCPP_WARN_THROTTLE(rclcpp::get_logger("DiffDriveArduino"), *node_->get_clock(), 5000, "Feedback message from motors wasn't received yet");
+      RCLCPP_WARN_THROTTLE(rclcpp::get_logger("AvantrexBotHardwareInterface"), *node_->get_clock(), 5000, "Feedback message from motors wasn't received yet");
       received_motor_state_msg_ptr_.get(motor_state);
       if (motor_state)
       {
@@ -168,29 +168,29 @@ namespace diffdrive_arduino
     // return CallbackReturn::SUCCESS;
   }
 
-  CallbackReturn DiffDriveArduino::on_deactivate(const rclcpp_lifecycle::State & /* previous_state */)
+  CallbackReturn AvantrexBotHardwareInterface::on_deactivate(const rclcpp_lifecycle::State & /* previous_state */)
   {
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Deactivating");
+    RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Deactivating");
     cleanup_node();
     received_motor_state_msg_ptr_.set(nullptr);
     return CallbackReturn::SUCCESS;
   }
 
-  CallbackReturn DiffDriveArduino::on_shutdown(const rclcpp_lifecycle::State & /* previous_state */)
+  CallbackReturn AvantrexBotHardwareInterface::on_shutdown(const rclcpp_lifecycle::State & /* previous_state */)
   {
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Shutting down");
+    RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Shutting down");
     cleanup_node();
     return CallbackReturn::SUCCESS;
   }
 
-  CallbackReturn DiffDriveArduino::on_error(const rclcpp_lifecycle::State & /* previous_state */)
+  CallbackReturn AvantrexBotHardwareInterface::on_error(const rclcpp_lifecycle::State & /* previous_state */)
   {
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Handling error");
+    RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Handling error");
     cleanup_node();
     return CallbackReturn::SUCCESS;
   }
 
-  std::vector<StateInterface> DiffDriveArduino::export_state_interfaces()
+  std::vector<StateInterface> AvantrexBotHardwareInterface::export_state_interfaces()
   {
 
     // We need to set up a position and a velocity interface for each wheel
@@ -208,7 +208,7 @@ namespace diffdrive_arduino
 
   }
 
-  std::vector<CommandInterface> DiffDriveArduino::export_command_interfaces()
+  std::vector<CommandInterface> AvantrexBotHardwareInterface::export_command_interfaces()
   {
     // We need to set up a velocity command interface for each wheel
 
@@ -222,36 +222,36 @@ namespace diffdrive_arduino
     return command_interfaces;
   }
 
-  void DiffDriveArduino::motor_state_cb(const std::shared_ptr<JointState> msg)
+  void AvantrexBotHardwareInterface::motor_state_cb(const std::shared_ptr<JointState> msg)
   {
-    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Received motors response '%s'", msg->name[0].c_str());
+    // RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Received motors response '%s'", msg->name[0].c_str());
     received_motor_state_msg_ptr_.set(std::move(msg));
   }
 
-  void DiffDriveArduino::cleanup_node()
+  void AvantrexBotHardwareInterface::cleanup_node()
   {
     motor_state_subscriber_.reset();
     realtime_motor_command_publisher_.reset();
     motor_command_publisher_.reset();
   }
 
-  return_type DiffDriveArduino::read(const rclcpp::Time & /* time */, const rclcpp::Duration & /* period */)
+  return_type AvantrexBotHardwareInterface::read(const rclcpp::Time & /* time */, const rclcpp::Duration & /* period */)
   {
     std::shared_ptr<JointState> motor_state;
     received_motor_state_msg_ptr_.get(motor_state);
 
-    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Reading motors state");
+    // RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Reading motors state");
     
     // Print JointStateMessage from motor_state
 
-    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->name[0]: %s", motor_state->name[0].c_str());
-    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->position[0]: %f", motor_state->position[0]);
-    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->velocity[0]: %f", motor_state->velocity[0]);
+    // RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "motor_state->name[0]: %s", motor_state->name[0].c_str());
+    // RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "motor_state->position[0]: %f", motor_state->position[0]);
+    // RCLCPP_INFO(rclcpp::get_logger("AvantrexBotHardwareInterface"), "motor_state->velocity[0]: %f", motor_state->velocity[0]);
     
 
     if (!motor_state)
     {
-      RCLCPP_ERROR(rclcpp::get_logger("DiffDriveArduino"), "Feedback message from motors wasn't received");
+      RCLCPP_ERROR(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Feedback message from motors wasn't received");
       return return_type::ERROR;
     }
 
@@ -262,7 +262,7 @@ namespace diffdrive_arduino
       if (pos_state_.find(motor_state->name[i]) == pos_state_.end() ||
           vel_state_.find(motor_state->name[i]) == vel_state_.end())
       {
-        RCLCPP_ERROR(rclcpp::get_logger("DiffDriveArduino"), "Position or velocity feedback not found for joint %s",
+        RCLCPP_ERROR(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Position or velocity feedback not found for joint %s",
                      motor_state->name[i].c_str());
         return return_type::ERROR;
       }
@@ -270,14 +270,14 @@ namespace diffdrive_arduino
       pos_state_[motor_state->name[i]] = motor_state->position[i];
       vel_state_[motor_state->name[i]] = motor_state->velocity[i];
 
-      // RCLCPP_DEBUG(rclcpp::get_logger("DiffDriveArduino"), "Position feedback: %f, velocity feedback: %f",
+      // RCLCPP_DEBUG(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Position feedback: %f, velocity feedback: %f",
       //              pos_state_[motor_state->name[i]], vel_state_[motor_state->name[i]]);
     }
 
     return return_type::OK;
   }
 
-  return_type DiffDriveArduino::write(const rclcpp::Time & /* time */, const rclcpp::Duration & /* period */)
+  return_type AvantrexBotHardwareInterface::write(const rclcpp::Time & /* time */, const rclcpp::Duration & /* period */)
   {
 
 
@@ -286,7 +286,7 @@ namespace diffdrive_arduino
       auto &motor_command = realtime_motor_command_publisher_->msg_;
       motor_command.data.clear();
 
-      // RCLCPP_DEBUG(rclcpp::get_logger("DiffDriveArduino"), "Wrtiting motors cmd message");
+      // RCLCPP_DEBUG(rclcpp::get_logger("AvantrexBotHardwareInterface"), "Wrtiting motors cmd message");
 
       for (auto const &joint : velocity_command_joint_order_)
       {
@@ -299,10 +299,10 @@ namespace diffdrive_arduino
     return return_type::OK;
   }
 
-} // namespace diffdrive_arduino
+} // namespace avantrex_bot_hardware_interface
 
 #include "pluginlib/class_list_macros.hpp"
 
 PLUGINLIB_EXPORT_CLASS(
-    diffdrive_arduino::DiffDriveArduino,
+    avantrex_bot_hardware_interface::AvantrexBotHardwareInterface,
     hardware_interface::SystemInterface)

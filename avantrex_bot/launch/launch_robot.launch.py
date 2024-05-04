@@ -40,7 +40,7 @@ def generate_launch_description():
         package="twist_mux",
         executable="twist_mux",
         parameters=[twist_mux_params],
-        remappings=[("/cmd_vel_out", "/diff_cont/cmd_vel_unstamped")],
+        remappings=[("/cmd_vel_out", "/diff_drive_controller/cmd_vel_unstamped")],
     )
 
     # package_launch_configuration = LaunchConfiguration("avantrex_bot")
@@ -67,7 +67,7 @@ def generate_launch_description():
     diff_drive_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["diff_cont"],
+        arguments=["diff_drive_controller"],
     )
 
     delayed_diff_drive_spawner = RegisterEventHandler(
@@ -77,16 +77,16 @@ def generate_launch_description():
         )
     )
 
-    joint_broad_spawner = Node(
+    joint_state_broadcaster_spawner = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_broad"],
+        arguments=["joint_state_broadcaster"],
     )
 
-    delayed_joint_broad_spawner = RegisterEventHandler(
+    delayed_joint_state_broadcaster_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
             target_action=controller_manager,
-            on_start=[joint_broad_spawner],
+            on_start=[joint_state_broadcaster_spawner],
         )
     )
     # ros2 run avantrex_bot pub_encoder_tick_joint_state.py
@@ -108,7 +108,7 @@ def generate_launch_description():
             twist_mux,
             delayed_controller_manager,
             delayed_diff_drive_spawner,
-            delayed_joint_broad_spawner,
+            delayed_joint_state_broadcaster_spawner,
             rviz_node,
         ]
     )

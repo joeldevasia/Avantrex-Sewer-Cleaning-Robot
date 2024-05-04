@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(diffdrive_arduino)
+project(avantrex_bot_hardware_interface)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -25,15 +25,15 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(std_msgs REQUIRED)
 
-add_library(diffdrive_arduino SHARED src/diffdrive_arduino.cpp)
+add_library(avantrex_bot_hardware_interface SHARED src/avantrex_bot_hardware_interface.cpp)
 
 target_include_directories(
-  diffdrive_arduino
+  avantrex_bot_hardware_interface
   PRIVATE
   include
 )
 ament_target_dependencies(
-  diffdrive_arduino
+  avantrex_bot_hardware_interface
   hardware_interface
   controller_manager
   std_msgs
@@ -42,10 +42,10 @@ ament_target_dependencies(
   pluginlib
 )
 
-pluginlib_export_plugin_description_file(hardware_interface robot_hardware.xml)
+pluginlib_export_plugin_description_file(hardware_interface avantrex_bot_hardware_interface.xml)
 
 install(
-  TARGETS diffdrive_arduino
+  TARGETS avantrex_bot_hardware_interface
   DESTINATION lib
 )
 
@@ -55,7 +55,7 @@ install(
 )
 
 ament_export_libraries(
-  diffdrive_arduino
+  avantrex_bot_hardware_interface
 )
 ament_export_dependencies(
   hardware_interface

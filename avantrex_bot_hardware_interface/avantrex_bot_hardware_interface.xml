@@ -1,0 +1,9 @@
+<library path="avantrex_bot_hardware_interface">
+  <class name="avantrex_bot_hardware_interface/AvantrexBotHardwareInterface"
+        type="avantrex_bot_hardware_interface::AvantrexBotHardwareInterface"
+        base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware Interface for Differential Drive Arduino controller.
+    </description>
+  </class>
+</library>

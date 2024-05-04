@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>diffdrive_arduino</name>
+  <name>avantrex_bot_hardware_interface</name>
   <version>0.0.1</version>
   <description>Provides an interface between diff_drive_controller and an Arduino.</description>
 
@@ -9,9 +9,9 @@
   <license>BSD</license>
 
 
-  <!-- <url type="website">http://wiki.ros.org/diffdrive_arduino</url> -->
-  <url type="bugtracker">https://github.com/joshnewans/diffdrive_arduino/issues</url>
-  <url type="repository">https://github.com/joshnewans/diffdrive_arduino</url>
+  <!-- <url type="website">http://wiki.ros.org/avantrex_bot_hardware_interface</url> -->
+  <url type="bugtracker">https://github.com/joshnewans/avantrex_bot_hardware_interface/issues</url>
+  <url type="repository">https://github.com/joshnewans/avantrex_bot_hardware_interface</url>
 
 
 
