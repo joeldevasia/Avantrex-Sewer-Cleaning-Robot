@@ -18,12 +18,6 @@
 #include "std_msgs/msg/float32_multi_array.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 
-#include "config.h"
-#include "wheel.h"
-
-// using hardware_interface::CallbackReturn;
-// using hardware_interface::return_type;
-
 namespace diffdrive_arduino
 {
   using return_type = hardware_interface::return_type;
@@ -91,11 +85,6 @@ namespace diffdrive_arduino
     uint connection_timeout_ms_;
 
   private:
-    Config cfg_;
-
-    Wheel l_wheel_;
-    Wheel r_wheel_;
-
     rclcpp::Logger logger_;
 
     std::chrono::time_point<std::chrono::system_clock> time_;
