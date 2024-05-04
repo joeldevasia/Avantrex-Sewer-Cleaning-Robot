@@ -33,8 +33,32 @@ if(BUILD_TESTING)
 endif()
 
 install(
-  DIRECTORY config description launch worlds
-  DESTINATION share/${PROJECT_NAME}
+  DIRECTORY
+    scripts
+    assets
+    launch
+    config
+    rviz
+    description
+  DESTINATION
+    share/${PROJECT_NAME}/
+)
+
+install(
+  PROGRAMS
+  DESTINATION lib/${PROJECT_NAME}
+)
+file(GLOB MY_PROGRAMS "scripts/*")
+install(
+  PROGRAMS ${MY_PROGRAMS}
+  DESTINATION lib/${PROJECT_NAME}/scripts
+)
+
+file(GLOB MY_PROGRAMS "launch/*")
+
+install(
+  PROGRAMS ${MY_PROGRAMS}
+  DESTINATION lib/${PROJECT_NAME}/launch
 )
 
 ament_package()

@@ -22,7 +22,6 @@
   <depend>pluginlib</depend>
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
-  <depend>serial</depend>
   <depend>rclcpp_lifecycle</depend>
   <!-- <depend>rclcpp_lifecyle</depend> -->
 

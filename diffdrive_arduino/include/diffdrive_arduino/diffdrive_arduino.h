@@ -20,7 +20,6 @@
 
 #include "config.h"
 #include "wheel.h"
-#include "arduino_comms.h"
 
 // using hardware_interface::CallbackReturn;
 // using hardware_interface::return_type;
@@ -93,7 +92,6 @@ namespace diffdrive_arduino
 
   private:
     Config cfg_;
-    ArduinoComms arduino_;
 
     Wheel l_wheel_;
     Wheel r_wheel_;

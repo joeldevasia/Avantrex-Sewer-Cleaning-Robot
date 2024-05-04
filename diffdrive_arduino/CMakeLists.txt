@@ -18,7 +18,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
-find_package(serial REQUIRED)
 find_package(hardware_interface REQUIRED)
 find_package(controller_manager REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -26,11 +25,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(std_msgs REQUIRED)
 
-
-
-
-
-add_library(diffdrive_arduino SHARED src/diffdrive_arduino.cpp src/wheel.cpp src/arduino_comms.cpp)
+add_library(diffdrive_arduino SHARED src/diffdrive_arduino.cpp src/wheel.cpp)
 
 target_include_directories(
   diffdrive_arduino
@@ -41,7 +36,6 @@ ament_target_dependencies(
   diffdrive_arduino
   hardware_interface
   controller_manager
-  serial
   std_msgs
   rclcpp
   rclcpp_lifecycle
@@ -81,8 +75,6 @@ install(
 )
 
 
-
-
 install(
   DIRECTORY controllers launch/
   DESTINATION share/${PROJECT_NAME}
@@ -96,7 +88,6 @@ ament_export_libraries(
 ament_export_dependencies(
   hardware_interface
   controller_manager
-  serial
   rclcpp
   pluginlib
 )

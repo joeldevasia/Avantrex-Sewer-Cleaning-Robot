@@ -27,21 +27,6 @@ namespace diffdrive_arduino
 
     time_ = std::chrono::system_clock::now();
 
-    cfg_.left_wheel_name = info_.hardware_parameters["left_wheel_name"];
-    cfg_.right_wheel_name = info_.hardware_parameters["right_wheel_name"];
-    cfg_.loop_rate = std::stof(info_.hardware_parameters["loop_rate"]);
-    cfg_.device = info_.hardware_parameters["device"];
-    cfg_.baud_rate = std::stoi(info_.hardware_parameters["baud_rate"]);
-    cfg_.timeout = std::stoi(info_.hardware_parameters["timeout"]);
-    cfg_.enc_counts_per_rev = std::stoi(info_.hardware_parameters["enc_counts_per_rev"]);
-
-    // Set up the wheels
-    l_wheel_.setup(cfg_.left_wheel_name, cfg_.enc_counts_per_rev);
-    r_wheel_.setup(cfg_.right_wheel_name, cfg_.enc_counts_per_rev);
-
-    // Set up the Arduino
-    // arduino_.setup(cfg_.device, cfg_.baud_rate, cfg_.timeout);
-
     for (const hardware_interface::ComponentInfo &joint : info_.joints)
     {
       if (joint.command_interfaces.size() != 1)
@@ -94,8 +79,8 @@ namespace diffdrive_arduino
 
     std::string velocity_command_joint_order_raw = info_.hardware_parameters["velocity_command_joint_order"];
 
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Received velocity command joint order raw: %s",
-                velocity_command_joint_order_raw.c_str());
+    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Received velocity command joint order raw: %s",
+    //             velocity_command_joint_order_raw.c_str());
 
     // remove whitespaces
     velocity_command_joint_order_raw.erase(
@@ -103,8 +88,8 @@ namespace diffdrive_arduino
                        { return std::isspace(static_cast<unsigned char>(c)); }),
         velocity_command_joint_order_raw.end());
 
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Removed Whitespaces from velocity command joint order: %s",
-                velocity_command_joint_order_raw.c_str());
+    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Removed Whitespaces from velocity command joint order: %s",
+    //             velocity_command_joint_order_raw.c_str());
 
     std::stringstream velocity_command_joint_order_stream(velocity_command_joint_order_raw);
     std::string joint_name;
@@ -221,14 +206,6 @@ namespace diffdrive_arduino
 
     return state_interfaces;
 
-    // std::vector<hardware_interface::StateInterface> state_interfaces;
-
-    // state_interfaces.emplace_back(hardware_interface::StateInterface(l_wheel_.name, hardware_interface::HW_IF_VELOCITY, &l_wheel_.vel));
-    // state_interfaces.emplace_back(hardware_interface::StateInterface(l_wheel_.name, hardware_interface::HW_IF_POSITION, &l_wheel_.pos));
-    // state_interfaces.emplace_back(hardware_interface::StateInterface(r_wheel_.name, hardware_interface::HW_IF_VELOCITY, &r_wheel_.vel));
-    // state_interfaces.emplace_back(hardware_interface::StateInterface(r_wheel_.name, hardware_interface::HW_IF_POSITION, &r_wheel_.pos));
-
-    // return state_interfaces;
   }
 
   std::vector<CommandInterface> DiffDriveArduino::export_command_interfaces()
@@ -242,17 +219,12 @@ namespace diffdrive_arduino
           info_.joints[i].name, hardware_interface::HW_IF_VELOCITY, &vel_commands_[info_.joints[i].name]));
     }
 
-    // std::vector<hardware_interface::CommandInterface> command_interfaces;
-
-    // command_interfaces.emplace_back(hardware_interface::CommandInterface(l_wheel_.name, hardware_interface::HW_IF_VELOCITY, &l_wheel_.cmd));
-    // command_interfaces.emplace_back(hardware_interface::CommandInterface(r_wheel_.name, hardware_interface::HW_IF_VELOCITY, &r_wheel_.cmd));
-
     return command_interfaces;
   }
 
   void DiffDriveArduino::motor_state_cb(const std::shared_ptr<JointState> msg)
   {
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Received motors response '%s'", msg->name[0].c_str());
+    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Received motors response '%s'", msg->name[0].c_str());
     received_motor_state_msg_ptr_.set(std::move(msg));
   }
 
@@ -265,43 +237,16 @@ namespace diffdrive_arduino
 
   return_type DiffDriveArduino::read(const rclcpp::Time & /* time */, const rclcpp::Duration & /* period */)
   {
-    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "read");
-
-    // TODO fix chrono duration
-
-    // Calculate time delta
-    // auto new_time = std::chrono::system_clock::now();
-    // std::chrono::duration<double> diff = new_time - time_;
-    // double deltaSeconds = diff.count();
-    // time_ = new_time;
-
-    // // if (!arduino_.connected())
-    // // {
-    // //   return return_type::ERROR;
-    // // }
-
-    // arduino_.readEncoderValues(l_wheel_.enc, r_wheel_.enc);
-
-    // double pos_prev = l_wheel_.pos;
-    // l_wheel_.pos = l_wheel_.calcEncAngle();
-    // l_wheel_.vel = (l_wheel_.pos - pos_prev) / deltaSeconds;
-
-    // pos_prev = r_wheel_.pos;
-    // r_wheel_.pos = r_wheel_.calcEncAngle();
-    // r_wheel_.vel = (r_wheel_.pos - pos_prev) / deltaSeconds;
-
-
-
     std::shared_ptr<JointState> motor_state;
     received_motor_state_msg_ptr_.get(motor_state);
 
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Reading motors state");
+    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "Reading motors state");
     
     // Print JointStateMessage from motor_state
 
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->name[0]: %s", motor_state->name[0].c_str());
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->position[0]: %f", motor_state->position[0]);
-    RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->velocity[0]: %f", motor_state->velocity[0]);
+    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->name[0]: %s", motor_state->name[0].c_str());
+    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->position[0]: %f", motor_state->position[0]);
+    // RCLCPP_INFO(rclcpp::get_logger("DiffDriveArduino"), "motor_state->velocity[0]: %f", motor_state->velocity[0]);
     
 
     if (!motor_state)
@@ -325,8 +270,8 @@ namespace diffdrive_arduino
       pos_state_[motor_state->name[i]] = motor_state->position[i];
       vel_state_[motor_state->name[i]] = motor_state->velocity[i];
 
-      RCLCPP_DEBUG(rclcpp::get_logger("DiffDriveArduino"), "Position feedback: %f, velocity feedback: %f",
-                   pos_state_[motor_state->name[i]], vel_state_[motor_state->name[i]]);
+      // RCLCPP_DEBUG(rclcpp::get_logger("DiffDriveArduino"), "Position feedback: %f, velocity feedback: %f",
+      //              pos_state_[motor_state->name[i]], vel_state_[motor_state->name[i]]);
     }
 
     return return_type::OK;
@@ -335,22 +280,13 @@ namespace diffdrive_arduino
   return_type DiffDriveArduino::write(const rclcpp::Time & /* time */, const rclcpp::Duration & /* period */)
   {
 
-    // if (!arduino_.connected())
-    // {
-    //   return return_type::ERROR;
-    // }
-
-    // arduino_.setMotorValues(l_wheel_.cmd / l_wheel_.rads_per_count / cfg_.loop_rate, r_wheel_.cmd / r_wheel_.rads_per_count / cfg_.loop_rate);
-
-
-
 
     if (realtime_motor_command_publisher_->trylock())
     {
       auto &motor_command = realtime_motor_command_publisher_->msg_;
       motor_command.data.clear();
 
-      RCLCPP_DEBUG(rclcpp::get_logger("DiffDriveArduino"), "Wrtiting motors cmd message");
+      // RCLCPP_DEBUG(rclcpp::get_logger("DiffDriveArduino"), "Wrtiting motors cmd message");
 
       for (auto const &joint : velocity_command_joint_order_)
       {
